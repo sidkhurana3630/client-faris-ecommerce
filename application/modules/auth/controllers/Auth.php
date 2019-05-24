@@ -19,21 +19,21 @@ class Auth extends MX_Controller {
 
     public function index() {
         $data = array(
-            'title' => 'eRabbitry - Login'
+            'title' => 'Toko - Login'
         );
 
-        $this->load->view('auth_header', $data);
+        $this->load->view('template/auth_header', $data);
         $this->load->view('login');
-        $this->load->view('auth_footer');
+        $this->load->view('template/auth_footer');
     }
 
     public function registration() {
         $data = array(
-            'title' => 'eRabbitry - Registration'
+            'title' => 'Toko - Registration'
         );
-        $this->load->view('auth_header', $data);
+        $this->load->view('template/auth_header', $data);
         $this->load->view('registration');
-        $this->load->view('auth_footer');
+        $this->load->view('template/auth_footer');
     }
 
     public function save_registration() {
