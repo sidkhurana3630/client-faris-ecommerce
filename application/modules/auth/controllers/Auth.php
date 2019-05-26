@@ -1,38 +1,44 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/**
- * Bismillah
- * Author : Ilham Muhammad.
- * Email  : ilhamhmmd@outlook.com
- * Copyrights 2019
- * Proudly Created for PI Gunadarma with Love
- */
-
 class Auth extends MX_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model('m_auth');
+        $this->load->model('m_auth');        
     }
 
     public function index() {
+
+        if($this->session->userdata('status') == 'user') {
+			redirect('user');
+		} elseif($this->session->userdata('status') == 'admin') {
+			redirect('admin');
+        }
+        
         $data = array(
             'title' => 'Toko - Login'
         );
 
         $this->load->view('template/auth_header', $data);
-        $this->load->view('login');
+        $this->load->view('v_login');
         $this->load->view('template/auth_footer');
     }
 
     public function registration() {
+
+        if($this->session->userdata('status') == 'user') {
+			redirect('user');
+		} elseif($this->session->userdata('status') == 'admin') {
+			redirect('admin');
+        }
+        
         $data = array(
             'title' => 'Toko - Registration'
         );
         $this->load->view('template/auth_header', $data);
-        $this->load->view('registration');
+        $this->load->view('v_registration');
         $this->load->view('template/auth_footer');
     }
 
@@ -71,7 +77,8 @@ class Auth extends MX_Controller {
                 'user_name'     => htmlspecialchars($this->input->post('nama_lengkap', true)),
                 'user_email'    => htmlspecialchars($this->input->post('email', true)),
                 'user_password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
-                'user_role_id'  => "2"
+                'user_role_id'  => "2",
+                'user_ctime'    => time()
             ];
 
             $this->m_auth->insert('users', $data);
@@ -114,14 +121,22 @@ class Auth extends MX_Controller {
                     // cek password
                     if(password_verify($password, $user['user_password'])) {
                         $data = [
-                            'name' => $user['user_name'],
                             'email' => $user['user_email'],
                             'role_id' => $user['user_role_id']
                         ];
-                        $this->session->set_userdata($data);
-                        $output['success'] = true;
-                        $output['message'] = 'Logged in......';
-                        $output['login'] = 'user';
+                        if($user['user_role_id'] == 1) {
+                            $data['status'] = 'admin';
+                            $this->session->set_userdata($data);
+                            $output['success'] = true;
+                            $output['message'] = 'Logged in......';
+                            $output['login'] = 'admin';
+                        } else if($user['user_role_id'] == 2) {
+                            $data['status'] = 'user';
+                            $this->session->set_userdata($data);
+                            $output['success'] = true;
+                            $output['message'] = 'Logged in......';
+                            $output['login'] = 'user';
+                        }
                     } else {
                         $output['success'] = false;
                         $output['message'] = "Alamat Email atau Password salah";
@@ -143,6 +158,7 @@ class Auth extends MX_Controller {
         $this->session->unset_userdata('name');
         $this->session->unset_userdata('email');
         $this->session->unset_userdata('role_id');
+        $this->session->unset_userdata('status');
 
         $this->session->set_flashdata('message', 
         '<div class="alert alert-success alert-dismissible">
