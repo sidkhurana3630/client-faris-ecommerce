@@ -170,7 +170,7 @@
                   <td class="text-center"><?= $t['produk_size']; ?></th>
                   <td><?= "Rp. ".$t['produk_harga']; ?></th>                  
                   <td><?= date('d F Y', $t['produk_ctime']); ?></td>
-                  <td class="text-center"><a class="btn btn-primary" href="<?= base_url('admin/edit/'.$t['produk_id']); ?>">Edit</a> | <a class="btn btn-danger" href="<?= base_url('admin/edit/'.$t['produk_id']); ?>">Hapus</a></td>
+                  <td class="text-center"><a class="btn btn-primary" href="<?= base_url('admin/edit/'.$t['produk_id']); ?>">Edit</a> | <a class="btn btn-danger" href="<?= base_url('admin/hapus/'.$t['produk_id']); ?>" onclick="return confirm('Apa anda yakin akan menghapusnya ?');">Hapus</a></td>
                 </tr>
                 <?php 
                 $no++;

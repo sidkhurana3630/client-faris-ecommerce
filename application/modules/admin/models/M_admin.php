@@ -93,5 +93,9 @@ class M_admin extends CI_Model {
 	{
 		$this->db->insert('tbl_detail_order', $data);
 	}
+
+	public function delete($table, $where) {
+		$this->db->delete($table, $where);
+	}
     
 }

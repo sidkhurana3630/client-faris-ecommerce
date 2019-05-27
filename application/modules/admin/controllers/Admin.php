@@ -211,4 +211,19 @@ class Admin extends MX_Controller
 		);
 		redirect('admin/edit');
 	}
+
+	public function hapus($id = null) {
+		$id = $this->uri->segment(3);
+
+		$this->m_admin->delete("tbl_produk", array('produk_id' => $id));
+
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				Produk berhasil dihapus
+			</div>'
+		);
+		redirect('admin/edit');
+	}
 }
