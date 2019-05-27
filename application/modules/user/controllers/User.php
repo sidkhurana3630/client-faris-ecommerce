@@ -8,9 +8,9 @@ class User extends MX_Controller
 	{
 		parent::__construct();
 		$this->load->model('m_user');
-		$this->load->library('form_validation');
 
-		if (!$this->session->userdata('status') == 'user') {
+
+		if ($this->session->userdata('status') != 'user') {
 			redirect('auth');
 		}
 	}
@@ -61,71 +61,75 @@ class User extends MX_Controller
 	public function update_user()
 	{
 		$rules = array(
-            array(
-                'field' => 'nm_lengkap',
-                'label' => 'Nama Lengkap',
-                'rules' => 'trim'
+			array(
+				'field' => 'nm_lengkap',
+				'label' => 'Nama Lengkap',
+				'rules' => 'trim'
 			),
 			array(
-                'field' => 'alamat',
-                'label' => 'Alamat Lengkap',
-                'rules' => 'trim'
-			), 
+				'field' => 'alamat',
+				'label' => 'Alamat Lengkap',
+				'rules' => 'trim'
+			),
 			array(
-                'field' => 'jenkel',
-                'label' => 'Jenis Kelamin',
-                'rules' => 'trim'
-			), 
+				'field' => 'jenkel',
+				'label' => 'Jenis Kelamin',
+				'rules' => 'trim'
+			),
 			array(
-                'field' => 'notelp',
-                'label' => 'No. Telp / HP',
-                'rules' => 'trim'
-			), 			
-            array(
-                'field' => 'password',
-                'label' => 'Password',
-                'rules' => 'trim|min_length[6]'
-            )
+				'field' => 'notelp',
+				'label' => 'No. Telp / HP',
+				'rules' => 'trim'
+			),
+			array(
+				'field' => 'password',
+				'label' => 'Password',
+				'rules' => 'trim|min_length[6]'
+			)
 		);
 
 		$this->form_validation->set_rules($rules);
 
-		if($this->form_validation->run() == false) {            
-			$this->session->set_flashdata('message', 
+		if ($this->form_validation->run() == false) {
+			$this->session->set_flashdata(
+				'message',
 				'<div class="alert alert-danger alert-dismissible">
 					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-					'.validation_errors().'
-				</div>');			
-			redirect('user/account');            
-        } else {
+					' . validation_errors() . '
+				</div>'
+			);
+			redirect('user/account');
+		} else {
 
 			//save data registration user ke db
 			$id['user_id'] = $this->input->post('id', true);
 
-            $data = [
+			$data = [
 				'user_name'     => htmlspecialchars($this->input->post('nm_lengkap', true)),
 				'user_address' 	=> htmlspecialchars($this->input->post("alamat", true)),
 				'user_jenkel' 	=> htmlspecialchars($this->input->post("jenkel", true)),
 				'user_notelp' 	=> htmlspecialchars($this->input->post("notelp", true)),
-                'user_email'    => htmlspecialchars($this->input->post('email', true)),                                
-                'user_mtime'    => time()
+				'user_email'    => htmlspecialchars($this->input->post('email', true)),
+				'user_mtime'    => time()
 			];
-			
+
 			if (!empty($this->input->post('password', true))) {
 				$data['user_password'] = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
 			}
-	
+
 			if (!empty($_FILES['foto']['name'])) {
 				$data['user_image'] = $this->_upload_foto();
 			}
-			
+
 			$this->m_user->update("users", $data, $id);
 
-			$this->session->set_flashdata('message', 
+			$this->session->set_flashdata(
+				'message',
 				'<div class="alert alert-success alert-dismissible">
 	            	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             		Akun berhasil di update
-        		</div>');
+        		</div>'
+			);
 			redirect('user/account');
 		}
 	}
@@ -196,5 +200,115 @@ class User extends MX_Controller
 				}
 			}
 		}
+	}
+
+	public function tampil_cart()
+	{
+		$data['kategori'] = $this->m_admin->get_kategori_all();
+		$this->load->view('themes/header', $data);
+		$this->load->view('shopping/tampil_cart', $data);
+		$this->load->view('themes/footer');
+	}
+
+	public function check_out()
+	{
+		$data['kategori'] = $this->m_admin->get_kategori_all();
+		$this->load->view('themes/header', $data);
+		$this->load->view('shopping/check_out', $data);
+		$this->load->view('themes/footer');
+	}
+
+	public function detail_produk()
+	{
+		$id = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$data['kategori'] = $this->m_admin->get_kategori_all();
+		$data['detail'] = $this->m_admin->get_produk_id($id)->row_array();
+		$this->load->view('themes/header', $data);
+		$this->load->view('shopping/detail_produk', $data);
+		$this->load->view('themes/footer');
+	}
+
+	function tambahin()
+	{
+		$data_produk = array(
+			'id' => $this->input->post('id'),
+			'name' => $this->input->post('nama'),
+			'price' => $this->input->post('harga'),
+			'gambar' => $this->input->post('gambar'),
+			'qty' => $this->input->post('qty')
+		);
+		$this->cart->insert($data_produk);
+		redirect('shopping');
+	}
+
+	function hapus($rowid)
+	{
+		if ($rowid == "all") {
+			$this->cart->destroy();
+		} else {
+			$data = array(
+				'rowid' => $rowid,
+				'qty' => 0
+			);
+			$this->cart->update($data);
+		}
+		redirect('shopping/tampil_cart');
+	}
+
+	function ubah_cart()
+	{
+		$cart_info = $_POST['cart'];
+		foreach ($cart_info as $id => $cart) {
+			$rowid = $cart['rowid'];
+			$price = $cart['price'];
+			$gambar = $cart['gambar'];
+			$amount = $price * $cart['qty'];
+			$qty = $cart['qty'];
+			$data = array(
+				'rowid' => $rowid,
+				'price' => $price,
+				'gambar' => $gambar,
+				'amount' => $amount,
+				'qty' => $qty
+			);
+			$this->cart->update($data);
+		}
+		redirect('shopping/tampil_cart');
+	}
+
+	public function proses_order()
+	{
+		//-------------------------Input data pelanggan--------------------------
+		$data_pelanggan = array(
+			'nama' => $this->input->post('nama'),
+			'email' => $this->input->post('email'),
+			'alamat' => $this->input->post('alamat'),
+			'telp' => $this->input->post('telp')
+		);
+		$id_pelanggan = $this->m_admin->tambah_pelanggan($data_pelanggan);
+		//-------------------------Input data order------------------------------
+		$data_order = array(
+			'tanggal' => date('Y-m-d'),
+			'pelanggan' => $id_pelanggan
+		);
+		$id_order = $this->m_admin->tambah_order($data_order);
+		//-------------------------Input data detail order-----------------------
+		if ($cart = $this->cart->contents()) {
+			foreach ($cart as $item) {
+				$data_detail = array(
+					'order_id' => $id_order,
+					'produk' => $item['id'],
+					'qty' => $item['qty'],
+					'harga' => $item['price']
+				);
+				$proses = $this->m_admin->tambah_detail_order($data_detail);
+			}
+		}
+		//-------------------------Hapus shopping cart--------------------------
+		$this->cart->destroy();
+		$data['kategori'] = $this->m_admin->get_kategori_all();
+		$this->load->view('themes/header', $data);
+		$this->load->view('shopping/sukses', $data);
+		$this->load->view('themes/footer');
 	}
 }

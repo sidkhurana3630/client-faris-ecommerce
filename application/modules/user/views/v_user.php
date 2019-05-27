@@ -302,7 +302,7 @@
 	<!-- Slider -->
 	<section class="section-slide">
 		<div class="wrap-slick1">
-			<div class="slick1">
+			<div class="slick1">			
 				<div class="item-slick1" style="background-image: url(<?= base_url('assets/vendor/cozastore/') ?>images/slide-01.jpg);">
 					<div class="container h-full">
 						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">

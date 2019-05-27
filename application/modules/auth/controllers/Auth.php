@@ -5,7 +5,7 @@ class Auth extends MX_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('form_validation');
+        
         $this->load->model('m_auth');        
     }
 
@@ -121,6 +121,7 @@ class Auth extends MX_Controller {
                     // cek password
                     if(password_verify($password, $user['user_password'])) {
                         $data = [
+                            'nama' => $user['user_name'],
                             'email' => $user['user_email'],
                             'role_id' => $user['user_role_id']
                         ];
