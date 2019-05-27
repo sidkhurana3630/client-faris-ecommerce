@@ -86,7 +86,7 @@
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Jumlah Barang</div>
+                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Jumlah Produk</div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jum_barang; ?></div>
                 </div>
                 <div class="col-auto">
@@ -144,7 +144,7 @@
       <!-- DataTales Example -->
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Table Barang</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Table Produk</h6>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -154,6 +154,7 @@
                   <th width="4%">No</th>
                   <th>Nama Produk</th>
                   <th>Size</th>
+                  <th>Deskripsi</th>
                   <th>Harga</th>
                   <th>Kategori Produk</th>
                   <th>Kategori Pengguna</th>
@@ -168,6 +169,7 @@
                   <td class="text-center"><?= $no; ?></th>
                   <td><?= $t['produk_nama']; ?></th>
                   <td class="text-center"><?= $t['produk_size']; ?></th>
+                  <td><?= substr($t['produk_deskripsi'], 0, 15) . " ...." ?></th>
                   <td><?= "Rp. ".$t['produk_harga']; ?></th>
                   <td><?= $t['kategori_nama']; ?></td>                  
                   <td><?= $t['pengguna']; ?></td>

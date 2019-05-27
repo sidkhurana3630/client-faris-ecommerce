@@ -8,8 +8,7 @@ class M_admin extends CI_Model {
     }
 
     public function update($table, $data, $cond) {        
-        $this->db->update($table, $data, $cond);
-        return $this->db->affected_rows() > 0 ? TRUE : FALSE;
+        $this->db->update($table, $data, $cond);        
     }
     
     public function get_user($table, $email) {
@@ -38,7 +37,20 @@ class M_admin extends CI_Model {
         
         return $query->result_array();
 	}
-
+	
+    public function get_produk_where($id)
+	{
+        $this->db
+            ->select('pd.*, kategori_nama, pengguna')
+            ->from('tbl_produk pd')
+			->join('tbl_kategori kt', 'kt.kategori_id = pd.produk_kategori_id')
+			->join('tbl_pengguna pgn', 'pgn.pengguna_id = pd.produk_pengguna_id')
+			->where('produk_id', $id);
+        
+        $query = $this->db->get();
+        
+        return $query->row_array();
+	}
 	public function get_produk_kategori($kategori)
 	{
 		if ($kategori > 0) {

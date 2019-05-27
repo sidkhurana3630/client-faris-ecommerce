@@ -50,23 +50,33 @@ class Admin extends MX_Controller
 		$this->load->view('template/admin_footer');
 	}
 
-	public function edit()
-	{
+	public function edit($id = null) {		
 		$email = $this->session->userdata('email');
 
 		$data = [
 			'title' => "CAMOC - Admin",
 			'user' 	=> $this->m_admin->get_user('users', $email),
+			'size' => $this->m_admin->get_all('tbl_size'),
 			'pengguna' => $this->m_admin->get_all('tbl_pengguna'),
 			'kategori' => $this->m_admin->get_all('tbl_kategori'),
 			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
 			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
-			'all_produk' => $this->m_admin->get_produk_all()
 		];
-		$this->load->view('template/admin_header', $data);
-		$this->load->view('template/admin_sidebar', $data);
-		$this->load->view('v_edit', $data);
-		$this->load->view('template/admin_footer');
+
+		if (!isset($id)) {
+			$data['all_produk'] = $this->m_admin->get_produk_all();
+			$this->load->view('template/admin_header', $data);
+			$this->load->view('template/admin_sidebar', $data);
+			$this->load->view('v_edit', $data);
+			$this->load->view('template/admin_footer');
+		} else {
+			$id = $this->uri->segment(3);
+			$data['all_produk'] = $this->m_admin->get_produk_where($id);
+			$this->load->view('template/admin_header', $data);
+			$this->load->view('template/admin_sidebar', $data);
+			$this->load->view('f_edit', $data);
+			$this->load->view('template/admin_footer');
+		}
 	}
 
 	private function _upload_foto1()
@@ -136,8 +146,8 @@ class Admin extends MX_Controller
 			'produk_created' => $this->session->userdata('nama'),
 			'produk_ctime'    => time()
 
-		];	
-		
+		];
+
 		if (!empty($_FILES['foto1']['name'])) {
 			$data['produk_gambar1'] = $this->_upload_foto1();
 		}
@@ -161,10 +171,11 @@ class Admin extends MX_Controller
 		);
 		redirect('admin/barang');
 	}
-	
-	public function edit_barang()
+
+	public function update_barang()
 	{
 		//save data barang user ke db
+		$id['produk_id'] = $this->input->post('id');
 		$data = [
 			'produk_nama'     => htmlspecialchars($this->input->post('nm_produk', true)),
 			'produk_deskripsi' 	=> htmlspecialchars($this->input->post("deskripsi", true)),
@@ -175,8 +186,8 @@ class Admin extends MX_Controller
 			'produk_created' => $this->session->userdata('nama'),
 			'produk_ctime'    => time()
 
-		];	
-		
+		];
+
 		if (!empty($_FILES['foto1']['name'])) {
 			$data['produk_gambar1'] = $this->_upload_foto1();
 		}
@@ -189,17 +200,15 @@ class Admin extends MX_Controller
 			$data['produk_gambar3'] = $this->_upload_foto3();
 		}
 
-		$this->m_admin->insert("tbl_produk", $data);
+		$this->m_admin->update("tbl_produk", $data, $id);
 
 		$this->session->set_flashdata(
 			'message',
 			'<div class="alert alert-success alert-dismissible">
-	            	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            		Produk berhasil ditambah
-        		</div>'
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				Produk berhasil diupdate
+			</div>'
 		);
-		redirect('admin/barang');
+		redirect('admin/edit');
 	}
-	
-	
 }

@@ -86,7 +86,7 @@
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Jumlah Barang</div>
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Jumlah Produk</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $jum_barang; ?></div>
                                 </div>
                                 <div class="col-auto">
@@ -144,21 +144,21 @@
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Tambah Produk</h6>
-                </div>                
-                <div class="card-body">
-                <?= $this->session->flashdata('message'); ?>                
-                    <form action="<?= base_url('admin/tambah_barang'); ?>" method="POST" enctype="multipart/form-data" id="form-upd">
+                    <h6 class="m-0 font-weight-bold text-primary">Edit Produk</h6>
+                </div>
+                <div class="card-body">                    
+                    <form action="<?= base_url('admin/update_barang'); ?>" method="POST" enctype="multipart/form-data" id="form-upd">
                         <div class="form-group row">
                             <label for="" class="font-weight-bold col-sm-2 col-form-label">Nama Produk</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" id="nm_produk" name="nm_produk" required>
+                                <input type="hidden" value="<?= $all_produk['produk_id'] ?>" name="id" readonly>
+                                <input type="text" class="form-control" id="nm_produk" name="nm_produk" value="<?= $all_produk['produk_nama'] ?>" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="" class="font-weight-bold col-sm-2 col-form-label">Deskripsi Produk</label>
                             <div class="col-sm-5">
-                                <textarea class="form-control" id="deskripsi" name="deskripsi" required><?= $user['user_address']; ?></textarea>
+                                <textarea class="form-control" id="deskripsi" name="deskripsi" required><?= $all_produk['produk_deskripsi']; ?></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -166,25 +166,28 @@
                             <div class="col-sm-5">
                                 <select class="custom-select" name="size" required>
                                     <option selected>-- Pilih Size --</option>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
+                                    <?php foreach ($size as $t) : ?>
+                                        <?php if ($all_produk['produk_size'] == $t['size']) : ?>
+                                            <option value="<?= $t['size']; ?>" selected><?= $t['size']; ?></option>
+                                        <?php else : ?>
+                                            <option value="<?= $t['size']; ?>" <?= set_select('size', $t['size']) ?>><?= $t['size']; ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="" class="font-weight-bold col-sm-2 col-form-label">Harga Produk</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" id="harga" name="harga" required>
+                                <input type="text" class="form-control" id="harga" name="harga" value="<?= $all_produk['produk_harga'] ?>" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="" class="font-weight-bold col-sm-2 col-form-label">Gambar Produk</label>
                             <div class="col-sm-5">
-                                <input type="file" class="form-control" id="foto1" name="foto1" required><br>
-                                <input type="file" class="form-control" id="foto2" name="foto2" required><br>
-                                <input type="file" class="form-control" id="foto3" name="foto3" required>
+                                <input type="file" class="form-control" id="foto1" name="foto1"><br>
+                                <input type="file" class="form-control" id="foto2" name="foto2"><br>
+                                <input type="file" class="form-control" id="foto3" name="foto3">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -193,7 +196,11 @@
                                 <select class="custom-select" name="kategori_brg" required>
                                     <option selected>-- Pilih --</option>
                                     <?php foreach ($kategori as $t) : ?>
-                                    <option value="<?= $t['kategori_id']; ?>"><?= $t['kategori_nama']; ?></option>
+                                        <?php if ($all_produk['produk_kategori_id'] == $t['kategori_id']) : ?>
+                                            <option value="<?= $t['kategori_id']; ?>" selected><?= $t['kategori_nama']; ?></option>
+                                        <?php else : ?>
+                                            <option value="<?= $t['kategori_id']; ?>" <?= set_select('kategori_nama', $t['kategori_nama']) ?>><?= $t['kategori_nama']; ?></option>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -204,7 +211,11 @@
                                 <select class="custom-select" name="kategori_pengguna" required>
                                     <option selected>-- Pilih --</option>
                                     <?php foreach ($pengguna as $t) : ?>
-                                    <option value="<?= $t['pengguna_id']; ?>"><?= $t['pengguna']; ?></option>
+                                        <?php if ($all_produk['produk_pengguna_id'] == $t['pengguna_id']) : ?>
+                                            <option value="<?= $t['pengguna_id']; ?>" selected><?= $t['pengguna']; ?></option>
+                                        <?php else : ?>
+                                            <option value="<?= $t['pengguna_id']; ?>" <?= set_select('pengguna', $t['pengguna']) ?>><?= $t['pengguna']; ?></option>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
