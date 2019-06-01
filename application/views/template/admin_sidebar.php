@@ -38,7 +38,7 @@
     </li>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item  <?= ($this->uri->uri_string() == 'admin/edit') ? 'active' : '' ?>">
+    <li class="nav-item  <?= ($this->uri->segment(2) == 'edit' ) ? 'active' : '' ?>">
       <a class="nav-link" href="<?= base_url('admin/edit'); ?>">
         <i class="fas fa-fw fa-tshirt"></i>
         <span>Edit | Hapus</span></a>

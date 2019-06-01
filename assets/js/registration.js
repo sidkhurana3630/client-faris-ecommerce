@@ -19,7 +19,7 @@ $(document).ready(function () {
                         notice.close();
                     });
                 } else {
-                    swal.fire(response.message, "Silahkan cek email untuk aktivasi", "success");
+                    swal.fire(response.message, "Silahkan cek email untuk aktivasi akun", "success");
                     document.getElementById("regform").reset();
                 }                
             }

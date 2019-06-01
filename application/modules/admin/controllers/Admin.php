@@ -20,6 +20,7 @@ class Admin extends MX_Controller
 
 		$data = [
 			'title' => "CAMOC - Admin",
+			'judul' => "DASHBOARD",
 			'user' 	=> $this->m_admin->get_user('users', $email),
 			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
 			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
@@ -37,6 +38,7 @@ class Admin extends MX_Controller
 
 		$data = [
 			'title' => "CAMOC - Admin",
+			'judul' => "Tambah Produk",
 			'user' 	=> $this->m_admin->get_user('users', $email),
 			'pengguna' => $this->m_admin->get_all('tbl_pengguna'),
 			'kategori' => $this->m_admin->get_all('tbl_kategori'),
@@ -55,6 +57,7 @@ class Admin extends MX_Controller
 
 		$data = [
 			'title' => "CAMOC - Admin",
+			'judul' => "EDIT PRODUK",
 			'user' 	=> $this->m_admin->get_user('users', $email),
 			'size' => $this->m_admin->get_all('tbl_size'),
 			'pengguna' => $this->m_admin->get_all('tbl_pengguna'),
@@ -169,7 +172,7 @@ class Admin extends MX_Controller
             		Produk berhasil ditambah
         		</div>'
 		);
-		redirect('admin/barang');
+		redirect('admin/tambah');
 	}
 
 	public function update_barang()

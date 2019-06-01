@@ -19,11 +19,27 @@ class User extends MX_Controller
 	{
 		$email = $this->session->userdata('email');
 
+		$data['all_produk'] = $this->m_user->get_produk_all();
 		$data['user'] 	= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
 		$data['title'] 	= "Toko";
 
 		$this->load->view('template/store_header', $data);
 		$this->load->view('v_user', $data);
+		$this->load->view('template/store_footer');
+	}
+
+	public function shop()
+	{
+		$email = $this->session->userdata('email');
+
+		$data['all_produk'] = $this->m_user->get_produk_all();
+		$data['user'] 	= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+		$data['title'] 	= "Toko";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_product', $data);
 		$this->load->view('template/store_footer');
 	}
 
@@ -37,6 +53,61 @@ class User extends MX_Controller
 
 		$this->load->view('template/store_header', $data);
 		$this->load->view('v_account', $data);
+		$this->load->view('template/store_footer');
+	}
+
+	public function women() {
+		$email = $this->session->userdata('email');
+
+		$data['all_produk'] = $this->m_user->get_produk_woman();
+		$data['user'] 		= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+		$data['title'] 		= "Women";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_women', $data);
+		$this->load->view('template/store_footer');
+	}
+	
+	public function men() {
+		$email = $this->session->userdata('email');
+
+		$data['all_produk'] = $this->m_user->get_produk_men();
+		$data['user'] 		= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+		$data['title'] 		= "Men";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_men', $data);
+		$this->load->view('template/store_footer');
+	}
+
+	public function tampil_cart()
+	{		
+		$email = $this->session->userdata('email');
+
+		// $data['kategori'] = $this->m_user->get_all('tbl_transaksi_detail');
+		$data['user'] 	= $this->m_user->get_user('users', $email);
+		$data['title'] 	= "Toko";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_cart', $data);
+		$this->load->view('template/store_footer');
+	}
+	
+	public function order()
+	{		
+		$email = $this->session->userdata('email');
+
+		// $data['kategori'] = $this->m_user->get_all('tbl_transaksi_detail');
+		$data['user'] 	= $this->m_user->get_user('users', $email);
+		$data['order'] 	= $this->m_user->get_order('tbl_order', $email);
+		$data['order_kode'] = $this->m_user->get_kode_order('tbl_order', 'Belum Lunas');
+		$data['title'] 	= "Toko";
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_order', $data);
 		$this->load->view('template/store_footer');
 	}
 
@@ -57,7 +128,24 @@ class User extends MX_Controller
 			return "profile.png";
 		}
 	}
-
+	
+	private function _upload_file()
+	{
+		$config['upload_path']          = './assets/uploads/transfer/';
+		$config['allowed_types']        = 'jpg|png';
+		$config['file_name']            = 'TF_' . time(); //get judul file
+		$config['overwrite']			= true;
+		$config['max_size']             = 1024; // 1MB
+		// $config['encrypt_name']         = TRUE; //enkripsi file name upload
+		// $config['max_width']            = 1024;
+		// $config['max_height']           = 768;
+		$this->load->library('upload', $config);
+		if ($this->upload->do_upload("file")) { //upload file
+			return $this->upload->data('file_name'); //ambil file name yang diupload		
+		} else {
+			return "profile.png";
+		}
+	}
 	public function update_user()
 	{
 		$rules = array(
@@ -200,15 +288,7 @@ class User extends MX_Controller
 				}
 			}
 		}
-	}
-
-	public function tampil_cart()
-	{
-		$data['kategori'] = $this->m_admin->get_kategori_all();
-		$this->load->view('themes/header', $data);
-		$this->load->view('shopping/tampil_cart', $data);
-		$this->load->view('themes/footer');
-	}
+	}	
 
 	public function check_out()
 	{
@@ -228,7 +308,7 @@ class User extends MX_Controller
 		$this->load->view('themes/footer');
 	}
 
-	function tambahin()
+	function tambah_cart()
 	{
 		$data_produk = array(
 			'id' => $this->input->post('id'),
@@ -238,10 +318,17 @@ class User extends MX_Controller
 			'qty' => $this->input->post('qty')
 		);
 		$this->cart->insert($data_produk);
-		redirect('shopping');
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<b>'.$this->input->post('nama').'</b> berhasil ditambahkan kedalam Cart
+			</div>'
+		);
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 
-	function hapus($rowid)
+	function delete_cart($rowid)
 	{
 		if ($rowid == "all") {
 			$this->cart->destroy();
@@ -252,10 +339,10 @@ class User extends MX_Controller
 			);
 			$this->cart->update($data);
 		}
-		redirect('shopping/tampil_cart');
+		redirect('user/tampil_cart');
 	}
 
-	function ubah_cart()
+	public function update_cart()
 	{
 		$cart_info = $_POST['cart'];
 		foreach ($cart_info as $id => $cart) {
@@ -273,42 +360,64 @@ class User extends MX_Controller
 			);
 			$this->cart->update($data);
 		}
-		redirect('shopping/tampil_cart');
+		redirect('user/tampil_cart');
+		// var_dump($data);
+		// exit;
 	}
 
 	public function proses_order()
-	{
-		//-------------------------Input data pelanggan--------------------------
-		$data_pelanggan = array(
-			'nama' => $this->input->post('nama'),
-			'email' => $this->input->post('email'),
-			'alamat' => $this->input->post('alamat'),
-			'telp' => $this->input->post('telp')
-		);
-		$id_pelanggan = $this->m_admin->tambah_pelanggan($data_pelanggan);
+	{		
 		//-------------------------Input data order------------------------------
-		$data_order = array(
-			'tanggal' => date('Y-m-d'),
-			'pelanggan' => $id_pelanggan
+		$data_order = array(			
+			'order_date' => time(),
+			'order_status' => "Belum Di Proses",
+			'order_payment' => "Belum Lunas",
+			'order_total' => $this->input->post('total'),
+			'order_email' => $this->input->post('user_id')
 		);
-		$id_order = $this->m_admin->tambah_order($data_order);
+		
+		$id_order = $this->m_user->tambah_order($data_order);
 		//-------------------------Input data detail order-----------------------
 		if ($cart = $this->cart->contents()) {
 			foreach ($cart as $item) {
 				$data_detail = array(
 					'order_id' => $id_order,
-					'produk' => $item['id'],
-					'qty' => $item['qty'],
-					'harga' => $item['price']
+					'order_detail_produk_id' => $item['id'],
+					'order_detail_produk' => $item['name'],
+					'order_detail_qty' => $item['qty'],
+					'order_detail_harga' => $item['price']
 				);
-				$proses = $this->m_admin->tambah_detail_order($data_detail);
+				$this->m_user->tambah_detail_order($data_detail);
 			}
 		}
 		//-------------------------Hapus shopping cart--------------------------
 		$this->cart->destroy();
-		$data['kategori'] = $this->m_admin->get_kategori_all();
-		$this->load->view('themes/header', $data);
-		$this->load->view('shopping/sukses', $data);
-		$this->load->view('themes/footer');
+		redirect('user/order');
+	}
+
+	public function upload_tf() {
+		//save data registration user ke db
+		$id['order_id'] = $this->input->post('order_id', true);
+
+		$data = [			
+			'order_bukti_pengirim' 	=> htmlspecialchars($this->input->post("nm_pengirim", true)),
+			'order_bukti_bank' 	=> htmlspecialchars($this->input->post("nm_bank", true)),
+			'order_status' => "Pengecekan Bukti TF"
+		];
+
+		if (!empty($_FILES['file']['name'])) {
+			$data['order_bukti_tf'] = $this->_upload_file();
+		}
+
+		$this->m_user->update("tbl_order", $data, $id);
+
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				Bukti Transfer berhasil di upload
+			</div>'
+		);
+		redirect('user/order');
 	}
 }

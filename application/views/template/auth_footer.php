@@ -21,6 +21,7 @@
 <script src="<?= base_url('assets/'); ?>vendor/sbadmin2/pnotify/PNotifyReference.js"></script>
 <script src="<?= base_url('assets/'); ?>js/registration.js"></script>
 <script src="<?= base_url('assets/'); ?>js/login.js"></script>
+<script src="<?= base_url('assets/'); ?>js/forget.js"></script>
 </body>
 
 </html>
