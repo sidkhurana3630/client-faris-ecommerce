@@ -57,20 +57,20 @@
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
 						<ul class="main-menu">
-							<li class="active-menu">
+							<li class="<?= ($this->uri->uri_string() == "user") ? "active-menu" : "" ?>">
 								<a href="<?= base_url('user'); ?>">Home</a>								
 							</li>
 
-							<li class="label1" data-label1="new">
+							<li class="label1 <?= ($this->uri->uri_string() == "user/shop") ? "active-menu" : "" ?>" data-label1="new">
 								<a href="<?= base_url('user/shop'); ?>">Shop</a>
 							</li>
 
-							<li>
-								<a href="about.html">About</a>
+							<li class="<?= ($this->uri->uri_string() == "user/about") ? "active-menu" : "" ?>">
+								<a href="<?= base_url('user/about'); ?>">About</a>
 							</li>
 
-							<li>
-								<a href="contact.html">Contact</a>
+							<li class="<?= ($this->uri->uri_string() == "user/contact") ? "active-menu" : "" ?>">
+								<a href="<?= base_url('user/contact'); ?>">Contact</a>
 							</li>
 						</ul>
 					</div>
@@ -154,15 +154,7 @@
 
 			<ul class="main-menu-m">
 				<li>
-					<a href="<?= base_url('user'); ?>">Home</a>
-					<ul class="sub-menu-m">
-						<li><a href="index.html">Homepage 1</a></li>
-						<li><a href="home-02.html">Homepage 2</a></li>
-						<li><a href="home-03.html">Homepage 3</a></li>
-					</ul>
-					<span class="arrow-main-menu-m">
-						<i class="fa fa-angle-right" aria-hidden="true"></i>
-					</span>
+					<a href="<?= base_url('user'); ?>">Home</a>					
 				</li>
 
 				<li>
@@ -170,15 +162,11 @@
 				</li>
 
 				<li>
-					<a href="blog.html">Blog</a>
+					<a href="<?= base_url('user/about'); ?>">About</a>
 				</li>
 
 				<li>
-					<a href="about.html">About</a>
-				</li>
-
-				<li>
-					<a href="contact.html">Contact</a>
+					<a href="<?= base_url('user/contact'); ?>">Contact</a>
 				</li>
 			</ul>
 		</div>

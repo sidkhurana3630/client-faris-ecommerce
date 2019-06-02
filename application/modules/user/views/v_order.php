@@ -8,7 +8,22 @@
 						Silahkan Transfer ke no. rekening <b class="text-primary">85962122321354</b> (Bank DKI)
 					</div>
 					<div class="row">
+					<div class="col-lg-6">
+						<hr>
+							<h4>Catatan :</h4>
+							<hr>
+							<ul>
+								<li>- No. Rekening DISTRO CAMOC hanya <b class="text-primary">85962122321354</b> (Bank DKI)</li>
+								<li>- Rekening hanya atas nama <b class="text-primary">Bambang Sutejo</b> (Bank DKI)</li>
+								<li>- Silahkan transfer sesuai dengan nominal <b class="text-primary">Total Harga</b> pada tabel My Order</li>
+								<li>- Sesuaikan pembayaran dengan <b class="text-primary">Kode Transaksi</b></li>
+								<li>- Apabila mengalami kendala saat upload bukti Transfer, silahkan kirim bukti TF ke WA <b class="text-primary">081281229893</b></li>
+								<li>- No. Resi akan muncul pada tabel My Order ketika barang sudah dikirimkan</li>
+							</ul>
+						</div>						
+
 						<div class="col-lg-6">
+						<hr>
 							<?= $this->session->flashdata('message'); ?>
 							<h4>Upload Bukti Transfer :</h4>
 							<hr>
@@ -22,7 +37,7 @@
 													<select class="select" class="form-control" style="width: 100%;" data-placeholder="-- Kode Transaksi --" name="order_id" id="order_id">
 														<option></option>
 														<?php
-														foreach ($order as $item) : ?>
+														foreach ($orderan as $item) : ?>
 															<option value="<?= $item['order_id']; ?>"><?= "ORDER-" . $item['order_id']; ?></option>
 														<?php endforeach; ?>
 													</select>
@@ -46,29 +61,18 @@
 											<label for="" class="font-weight-bold col-sm-3 col-form-label">Upload Bukti TF</label>
 											<div class="col-sm-8">
 												<input type="file" class="form-control" id="file" name="file" required>
+												<small class="text-danger">Bukti TF berupa JPG / PNG (Maks 1 MB)</small>
 											</div>
 										</div>
 
-										<button class="btn btn-primary" style="width:100px;" type="submit">Upload</button>
-
-										<hr>
+										<button class="btn btn-primary" style="width:100px; float:right;" type="submit">Upload</button>
+										
 
 									</div>
 								</div>
 							</form>
 						</div>
 
-						<div class="col-lg-6">
-							<h4>Catatan :</h4>
-							<hr>
-							<ul>
-								<li>- No. Rekening DISTRO CAMOC hanya <b class="text-primary">85962122321354</b> (Bank DKI)</li>
-								<li>- Rekening hanya atas nama <b class="text-primary">Bambang Sutejo</b> (Bank DKI)</li>
-								<li>- Silahkan transfer sesuai dengan nominal <b>Total Harga</b> pada tabel My Order</li>
-								<li>- Apabila mengalami kendala saat upload bukti Transfer, silahkan kirim bukti TF ke WA <b class="text-primary">081281229893</b></li>
-								<li>- No. Resi akan muncul pada tabel My Order ketika barang sudah dikirimkan</li>
-							</ul>
-						</div>
 					</div>
 
 					<hr>

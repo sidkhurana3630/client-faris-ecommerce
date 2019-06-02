@@ -1,56 +1,99 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class M_admin extends CI_Model {
+class M_admin extends CI_Model
+{
 
-    public function insert($table, $data) {
-        $this->db->insert($table, $data);
-    }
-
-    public function update($table, $data, $cond) {        
-        $this->db->update($table, $data, $cond);        
-    }
-    
-    public function get_user($table, $email) {
-        return $this->db->get_where($table, ['user_email' => $email])->row_array();
-    }
-
-    public function get_all($table) {
-        return $this->db->get($table)->result_array();
-    }
-
-    public function get_count($table, $cond) {
-        $query =  $this->db->get_where($table, $cond)->num_rows();
-
-        return $query;
-    }
-
-    public function get_produk_all()
+	public function insert($table, $data)
 	{
-        $this->db
-            ->select('pd.*, kategori_nama, pengguna')
-            ->from('tbl_produk pd')
-			->join('tbl_kategori kt', 'kt.kategori_id = pd.produk_kategori_id')
-			->join('tbl_pengguna pgn', 'pgn.pengguna_id = pd.produk_pengguna_id');			
-        
-        $query = $this->db->get();
-        
-        return $query->result_array();
+		$this->db->insert($table, $data);
 	}
-	
-    public function get_produk_where($id)
+
+	public function update($table, $data, $cond)
 	{
-        $this->db
-            ->select('pd.*, kategori_nama, pengguna')
-            ->from('tbl_produk pd')
+		$this->db->update($table, $data, $cond);
+	}
+
+	public function get_user($table, $email)
+	{
+		return $this->db->get_where($table, ['user_email' => $email])->row_array();
+	}
+
+	public function get_member($table, $role)
+	{
+		return $this->db->get_where($table, ['user_role_id' => $role])->result_array();
+	}
+
+	public function get_all($table)
+	{
+		return $this->db->get($table)->result_array();
+	}
+
+	public function get_count($table, $cond)
+	{
+		$query =  $this->db->get_where($table, $cond)->num_rows();
+
+		return $query;
+	}
+
+	public function get_produk_all()
+	{
+		$this->db
+			->select('pd.*, kategori_nama, pengguna')
+			->from('tbl_produk pd')
+			->join('tbl_kategori kt', 'kt.kategori_id = pd.produk_kategori_id')
+			->join('tbl_pengguna pgn', 'pgn.pengguna_id = pd.produk_pengguna_id');
+
+		$query = $this->db->get();
+
+		return $query->result_array();
+	}
+
+	public function get_order_all()
+	{
+		$this->db
+			->select('or.*')
+			->from('tbl_order or');
+		// ->join('tbl_order_detail od', 'od.order_id = or.order_id');			
+
+		$query = $this->db->get();
+
+		return $query->result_array();
+	}
+
+	public function get_order_detail()
+	{
+		$this->db
+			->select('or.*')
+			->from('tbl_order_detail or');
+		// ->join('tbl_order_detail od', 'od.order_id = or.order_id');			
+
+		$query = $this->db->get();
+
+		return $query->result_array();
+	}
+
+	public function get_produk_where($id)
+	{
+		$this->db
+			->select('pd.*, kategori_nama, pengguna')
+			->from('tbl_produk pd')
 			->join('tbl_kategori kt', 'kt.kategori_id = pd.produk_kategori_id')
 			->join('tbl_pengguna pgn', 'pgn.pengguna_id = pd.produk_pengguna_id')
 			->where('produk_id', $id);
-        
-        $query = $this->db->get();
-        
-        return $query->row_array();
+
+		$query = $this->db->get();
+
+		return $query->row_array();
 	}
+
+	public function get_order_where($id)
+	{
+		$query = $this->db->get_where('tbl_order', ['order_id' => $id]);
+
+		return $query->row_array();
+	}
+
 	public function get_produk_kategori($kategori)
 	{
 		if ($kategori > 0) {
@@ -94,8 +137,8 @@ class M_admin extends CI_Model {
 		$this->db->insert('tbl_detail_order', $data);
 	}
 
-	public function delete($table, $where) {
+	public function delete($table, $where)
+	{
 		$this->db->delete($table, $where);
 	}
-    
 }

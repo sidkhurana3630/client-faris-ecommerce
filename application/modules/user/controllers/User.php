@@ -42,6 +42,34 @@ class User extends MX_Controller
 		$this->load->view('v_product', $data);
 		$this->load->view('template/store_footer');
 	}
+	
+	public function about()
+	{
+		$email = $this->session->userdata('email');
+
+		$data['all_produk'] = $this->m_user->get_produk_all();
+		$data['user'] 	= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+		$data['title'] 	= "Toko";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_about', $data);
+		$this->load->view('template/store_footer');
+	}
+
+	public function contact()
+	{
+		$email = $this->session->userdata('email');
+
+		$data['all_produk'] = $this->m_user->get_produk_all();
+		$data['user'] 	= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+		$data['title'] 	= "Toko";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_contact', $data);
+		$this->load->view('template/store_footer');
+	}
 
 	public function account()
 	{
@@ -81,6 +109,18 @@ class User extends MX_Controller
 		$this->load->view('v_men', $data);
 		$this->load->view('template/store_footer');
 	}
+	public function men_women() {
+		$email = $this->session->userdata('email');
+
+		$data['all_produk'] = $this->m_user->get_produk_unisex();
+		$data['user'] 		= $this->m_user->get_user('users', $email);
+		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');
+		$data['title'] 		= "Men";
+
+		$this->load->view('template/store_header', $data);
+		$this->load->view('v_menwomen', $data);
+		$this->load->view('template/store_footer');
+	}
 
 	public function tampil_cart()
 	{		
@@ -101,7 +141,8 @@ class User extends MX_Controller
 
 		// $data['kategori'] = $this->m_user->get_all('tbl_transaksi_detail');
 		$data['user'] 	= $this->m_user->get_user('users', $email);
-		$data['order'] 	= $this->m_user->get_order('tbl_order', $email);
+		$data['orderan'] 	= $this->m_user->get_order_where('tbl_order', ['order_email' => $email, 'order_payment' => 'Belum Lunas']);
+		$data['order'] 	= $this->m_user->get_order_where('tbl_order', ['order_email' => $email]);
 		$data['order_kode'] = $this->m_user->get_kode_order('tbl_order', 'Belum Lunas');
 		$data['title'] 	= "Toko";
 		$data['jenkel'] 	= $this->m_user->get_all('jenis_kelamin');

@@ -98,7 +98,7 @@
                     </div>
                 </div>
 
-               <!-- Earnings (Monthly) Card Example -->
+                <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
@@ -136,73 +136,46 @@
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Tambah Produk</h6>
-                </div>                
-                <div class="card-body">
-                <?= $this->session->flashdata('message'); ?>                
-                    <form action="<?= base_url('admin/tambah_barang'); ?>" method="POST" enctype="multipart/form-data" id="form-upd">
+                    <h6 class="m-0 font-weight-bold text-primary">Update Order</h6>
+                </div>
+                <div class="card-body">                    
+                    <form action="<?= base_url('admin/update_orderan'); ?>" method="POST" id="form-upd-order">
                         <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Nama Produk</label>
+                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Kode Transaksi</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" id="nm_produk" name="nm_produk" required>
+                                <input type="hidden" value="<?= $all_order['order_id'] ?>" name="id" readonly>
+                                <input type="text" class="form-control" id="kd_transaksi" name="kd_transaksi" value="<?= "ORDER-".$all_order['order_id'] ?>" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Deskripsi Produk</label>
+                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Status Order</label>
                             <div class="col-sm-5">
-                                <textarea class="form-control" id="deskripsi" name="deskripsi" required><?= $user['user_address']; ?></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Size</label>
-                            <div class="col-sm-5">
-                                <select class="custom-select" name="size" required>
-                                    <option selected>-- Pilih Size --</option>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Harga Produk</label>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="harga" name="harga" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Gambar Produk</label>
-                            <div class="col-sm-5">
-                                <input type="file" class="form-control" id="foto1" name="foto1" required><br>
-                                <input type="file" class="form-control" id="foto2" name="foto2" required><br>
-                                <input type="file" class="form-control" id="foto3" name="foto3" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Kategori Barang</label>
-                            <div class="col-sm-5">
-                                <select class="custom-select" name="kategori_brg" required>
+                                <select class="custom-select" name="status_order" required>
                                     <option selected>-- Pilih --</option>
-                                    <?php foreach ($kategori as $t) : ?>
-                                    <option value="<?= $t['kategori_id']; ?>"><?= $t['kategori_nama']; ?></option>
-                                    <?php endforeach; ?>
+                                    <option value="Pengecekan Bukti TF">Pengecekan Bukti TF</option>
+                                    <option value="Pembayaran Diterima">Pembayaran Diterima</option>
+                                    <option value="Sudah Terkirim">Sudah Terkirim</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>                                             
                         <div class="form-group row">
-                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Kategori Pemakai</label>
+                            <label for="" class="font-weight-bold col-sm-2 col-form-label">Status Pembayaran</label>
                             <div class="col-sm-5">
-                                <select class="custom-select" name="kategori_pengguna" required>
+                                <select class="custom-select" name="status_payment" required>
                                     <option selected>-- Pilih --</option>
-                                    <?php foreach ($pengguna as $t) : ?>
-                                    <option value="<?= $t['pengguna_id']; ?>"><?= $t['pengguna']; ?></option>
-                                    <?php endforeach; ?>
+                                    <option value="Belum Lunas">Belum Lunas</option>
+                                    <option value="Lunas">Lunas</option>                                    
                                 </select>
+                            </div>
+                        </div>                                             
+                        <div class="form-group row">
+                            <label for="" class="font-weight-bold col-sm-2 col-form-label">No. Resi</label>
+                            <div class="col-sm-5">                                
+                                <input type="text" class="form-control" id="no_resi" name="no_resi" value="<?= $all_order['order_resi'] ?>" required>
                             </div>
                         </div>
                         <hr>
-                        <button class="btn btn-primary" style="width:200px; height: 50px;" type="submit">Tambah</button>
+                        <button class="btn btn-primary" style="width:200px; height: 50px;" type="submit">Update</button>
 
                     </form>
                 </div>

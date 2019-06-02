@@ -22,6 +22,8 @@ class Admin extends MX_Controller
 			'title' => "CAMOC - Admin",
 			'judul' => "DASHBOARD",
 			'user' 	=> $this->m_admin->get_user('users', $email),
+			'jum_order_pending' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Belum Lunas']),
+			'jum_order_sukses' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Lunas']),
 			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
 			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
 			'all_produk' => $this->m_admin->get_produk_all()
@@ -29,6 +31,48 @@ class Admin extends MX_Controller
 		$this->load->view('template/admin_header', $data);
 		$this->load->view('template/admin_sidebar', $data);
 		$this->load->view('v_admin', $data);
+		$this->load->view('template/admin_footer');
+	}
+	
+	public function member()
+	{
+		$email = $this->session->userdata('email');
+
+		$data = [
+			'user' 	=> $this->m_admin->get_user('users', $email),
+			'title' => "CAMOC - Admin",
+			'judul' => "MEMBER",
+			'member' 	=> $this->m_admin->get_member('users', '2'),
+			'jum_order_pending' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Belum Lunas']),
+			'jum_order_sukses' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Lunas']),
+			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
+			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL)			
+		];
+		$this->load->view('template/admin_header', $data);
+		$this->load->view('template/admin_sidebar', $data);
+		$this->load->view('v_member', $data);
+		$this->load->view('template/admin_footer');
+	}
+	
+	public function order()
+	{
+		$email = $this->session->userdata('email');
+
+		$data = [
+			'user' 	=> $this->m_admin->get_user('users', $email),
+			'title' => "CAMOC - Admin",
+			'judul' => "PENDING ORDER",
+			'member' 	=> $this->m_admin->get_member('users', '2'),
+			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
+			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
+			'jum_order_pending' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Belum Lunas']),
+			'jum_order_sukses' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Lunas']),
+			'all_order' => $this->m_admin->get_order_all(),
+			'all_order_detail' => $this->m_admin->get_order_detail()
+		];
+		$this->load->view('template/admin_header', $data);
+		$this->load->view('template/admin_sidebar', $data);
+		$this->load->view('v_order', $data);
 		$this->load->view('template/admin_footer');
 	}
 
@@ -42,6 +86,8 @@ class Admin extends MX_Controller
 			'user' 	=> $this->m_admin->get_user('users', $email),
 			'pengguna' => $this->m_admin->get_all('tbl_pengguna'),
 			'kategori' => $this->m_admin->get_all('tbl_kategori'),
+			'jum_order_pending' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Belum Lunas']),
+			'jum_order_sukses' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Lunas']),
 			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
 			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
 			'all_produk' => $this->m_admin->get_produk_all()
@@ -62,6 +108,8 @@ class Admin extends MX_Controller
 			'size' => $this->m_admin->get_all('tbl_size'),
 			'pengguna' => $this->m_admin->get_all('tbl_pengguna'),
 			'kategori' => $this->m_admin->get_all('tbl_kategori'),
+			'jum_order_pending' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Belum Lunas']),
+			'jum_order_sukses' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Lunas']),
 			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
 			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
 		];
@@ -78,6 +126,34 @@ class Admin extends MX_Controller
 			$this->load->view('template/admin_header', $data);
 			$this->load->view('template/admin_sidebar', $data);
 			$this->load->view('f_edit', $data);
+			$this->load->view('template/admin_footer');
+		}
+	}
+	
+	public function update_order($id = null) {		
+		$email = $this->session->userdata('email');
+
+		$data = [
+			'title' => "CAMOC - Admin",
+			'judul' => "UPDATE ORDER",
+			'user' 	=> $this->m_admin->get_user('users', $email),
+			'size' => $this->m_admin->get_all('tbl_size'),
+			'pengguna' => $this->m_admin->get_all('tbl_pengguna'),
+			'kategori' => $this->m_admin->get_all('tbl_kategori'),
+			'jum_order_pending' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Belum Lunas']),
+			'jum_order_sukses' => $this->m_admin->get_count('tbl_order', ['order_payment' => 'Lunas']),
+			'jum_member' => $this->m_admin->get_count('users', ['user_role_id' => 2, 'user_is_active' => 1]),
+			'jum_barang' => $this->m_admin->get_count('tbl_produk', NULL),
+		];
+
+		if (!isset($id)) {
+			redirect('admin/order');
+		} else {
+			$id = $this->uri->segment(3);
+			$data['all_order'] = $this->m_admin->get_order_where($id);
+			$this->load->view('template/admin_header', $data);
+			$this->load->view('template/admin_sidebar', $data);
+			$this->load->view('f_order', $data);
 			$this->load->view('template/admin_footer');
 		}
 	}
@@ -213,6 +289,28 @@ class Admin extends MX_Controller
 			</div>'
 		);
 		redirect('admin/edit');
+	}
+	
+	public function update_orderan()
+	{
+		//save data barang user ke db
+		$id['order_id'] = $this->input->post('id');
+		$data = [			
+			'order_status' 	=> htmlspecialchars($this->input->post("status_order", true)),
+			'order_payment' 	=> htmlspecialchars($this->input->post("status_payment", true)),
+			'order_resi' 	=> htmlspecialchars($this->input->post("no_resi", true))		
+		];		
+
+		$this->m_admin->update("tbl_order", $data, $id);
+
+		$this->session->set_flashdata(
+			'message',
+			'<div class="alert alert-success alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				Order berhasil diupdate
+			</div>'
+		);
+		redirect('admin/order');
 	}
 
 	public function hapus($id = null) {

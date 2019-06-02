@@ -12,18 +12,21 @@
                         <div class="col-lg">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Lupa Password ?</h1>
+                                    <h1 class="h4 text-gray-900">Reset Password For</h1>
+                                    <h5 class="mb-4"><?= $this->session->userdata('reset_email'); ?></h5>
                                 </div>
-                                <div class="alert alert-info alert-dismissible">
-                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                    Silahkan masukkan email anda
-                                </div>
-                                <form class="user" id="forgetform" method="POST" action="<?= base_url('auth/forgetPass'); ?>">
+                                <hr>
+                                <form class="user" id="resetform" method="POST" action="<?= base_url('auth/changePassword'); ?>">
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" id="email" name="email" aria-describedby="emailHelp" placeholder="Alamat Email">
-                                    </div>                                    
+                                        <input type="password" class="form-control form-control-user" id="pass1" name="pass1" placeholder="New Password">
+                                        <?= form_error('pass1', '<small class="text-danger pl-3">', '</small>'); ?>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user" id="pass2" name="pass2" placeholder="Repeat Password">
+                                        <?= form_error('pass2', '<small class="text-danger pl-3">', '</small>'); ?>
+                                    </div>
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        Lupa Password
+                                        Reset Password
                                     </button>
                                 </form>
                                 <hr>

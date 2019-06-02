@@ -43,27 +43,35 @@
         <i class="fas fa-fw fa-tshirt"></i>
         <span>Edit | Hapus</span></a>
     </li>
-
+    
     <!-- Divider -->
     <hr class="sidebar-divider">
 
     <!-- Heading -->
     <div class="sidebar-heading">
-      Addons
-    </div>
+      Member
+    </div>    
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item">
-      <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-chart-area"></i>
-        <span>Charts</span></a>
-    </li>
+    <li class="nav-item  <?= ($this->uri->uri_string() == 'admin/member') ? 'active' : '' ?>">
+      <a class="nav-link" href="<?= base_url('admin/member'); ?>">
+        <i class="fas fa-fw fa-user"></i>
+        <span>Lihat</span></a>
+    </li>    
+    
+    <!-- Divider -->
+    <hr class="sidebar-divider">
 
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-      <a class="nav-link" href="tables.html">
-        <i class="fas fa-fw fa-table"></i>
-        <span>Tables</span></a>
+    <!-- Heading -->
+    <div class="sidebar-heading">
+      Order
+    </div>    
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item  <?= ($this->uri->uri_string() == 'admin/order') ? 'active' : '' ?>">
+      <a class="nav-link" href="<?= base_url('admin/order'); ?>">
+        <i class="fas fa-fw fa-clipboard-list"></i>
+        <span>Cek</span></a>
     </li>
 
     <!-- Divider -->

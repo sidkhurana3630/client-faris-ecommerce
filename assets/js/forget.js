@@ -19,7 +19,7 @@ $(document).ready(function () {
                         notice.close();
                     });
                 } else {
-                    swal.fire(response.message, "Silahkan cek email untuk melihat password", "success");
+                    swal.fire(response.message, "Silahkan cek email untuk reset password", "success");
                     document.getElementById("forgetform").reset();
                 }                
             }

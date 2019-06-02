@@ -135,7 +135,7 @@
       <!-- DataTales Example -->
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Table Produk</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Table Member</h6>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -143,28 +143,26 @@
               <thead>
                 <tr class="text-center">
                   <th width="4%">No</th>
-                  <th>Nama Produk</th>
-                  <th>Size</th>
-                  <th>Deskripsi</th>
-                  <th>Harga</th>
-                  <th>Kategori Produk</th>
-                  <th>Kategori Pengguna</th>
-                  <th>Tgl. Upload</th>
+                  <th>Nama Member</th>
+                  <th>Jenis Kelamin</th>
+                  <th>Alamat</th>
+                  <th>Email</th>
+                  <th>Status Akun</th>
+                  <th>Tgl. Daftar</th>
                 </tr>
               </thead>
               <tbody>
                 <?php 
                 $no = 1;
-                foreach($all_produk as $t) : ?>
+                foreach($member as $t) : ?>
                 <tr>
                   <td class="text-center"><?= $no; ?></th>
-                  <td><?= $t['produk_nama']; ?></th>
-                  <td class="text-center"><?= $t['produk_size']; ?></th>
-                  <td><?= substr($t['produk_deskripsi'], 0, 15) . " ...." ?></th>
-                  <td><?= "Rp. ".$t['produk_harga']; ?></th>
-                  <td><?= $t['kategori_nama']; ?></td>                  
-                  <td><?= $t['pengguna']; ?></td>
-                  <td><?= date('d F Y', $t['produk_ctime']); ?></td>
+                  <td><?= $t['user_name']; ?></th>
+                  <td class="text-center"><?= $t['user_jenkel']; ?></th>                  
+                  <td><?= $t['user_address']; ?></td>                  
+                  <td><?= $t['user_email']; ?></td>
+                  <td class="text-center"><?= ($t['user_is_active'] == '1') ? "Aktif" : "Belum Aktif" ?></td>
+                  <td><?= date('d F Y', $t['user_ctime']); ?></td>
                 </tr>
                 <?php 
                 $no++;

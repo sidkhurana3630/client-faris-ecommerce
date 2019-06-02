@@ -19,6 +19,10 @@ class M_user extends CI_Model {
     public function get_order($table, $email) {
         return $this->db->get_where($table, ['order_email' => $email])->result_array();
     }
+    
+    public function get_order_where($table, $email) {
+        return $this->db->get_where($table, $email)->result_array();
+    }
 
     public function get_kode_order($table, $email) {
         return $this->db->get_where($table, ['order_status' => $email])->result_array();
@@ -70,6 +74,20 @@ class M_user extends CI_Model {
         return $query->result_array();
     }
     
+    public function get_produk_unisex()
+	{
+        $this->db
+            ->select('pd.*, kategori_nama, pengguna')
+            ->from('tbl_produk pd')
+			->join('tbl_kategori kt', 'kt.kategori_id = pd.produk_kategori_id')
+			->join('tbl_pengguna pgn', 'pgn.pengguna_id = pd.produk_pengguna_id')
+			->where('produk_pengguna_id', '3');
+        
+        $query = $this->db->get();
+        
+        return $query->result_array();
+    }
+
     public function get_produk_all()
 	{
         $this->db

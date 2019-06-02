@@ -54,7 +54,7 @@ class Auth extends MX_Controller
         }
 
         $data = array(
-            'title' => 'Toko - Login'
+            'title' => 'Toko - Forget Password'
         );
 
         $this->load->view('template/auth_header', $data);
@@ -97,13 +97,13 @@ class Auth extends MX_Controller
             //save data registration user ke db
             $data = [
                 'user_name'     => htmlspecialchars($this->input->post('nama_lengkap', true)),
-                'user_email'    => htmlspecialchars($email),
+                'user_email'    => htmlspecialchars($email),                
                 'user_password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
                 'user_role_id'  => "2",
                 'user_ctime'    => time()
             ];
 
-            // siapkan token
+            // siapkan Ftoken
             $token = base64_encode(random_bytes(32));
 
             $user_token = [
@@ -127,7 +127,7 @@ class Auth extends MX_Controller
             array(
                 'field' => 'email',
                 'label' => 'Alamat Email',
-                'rules' => 'required|trim|valid_email|is_unique[users.user_email]'
+                'rules' => 'required|trim|valid_email'
             )
         );
         $this->form_validation->set_rules($rules);
@@ -135,31 +135,27 @@ class Auth extends MX_Controller
         if ($this->form_validation->run() == false) {
             $output['error'] = true;
             $output['message'] = strip_tags(validation_errors("- "));
-        } else {
-            $output['message'] = 'Registrasi Berhasil';
+        } else {            
             $email = $this->input->post('email', true);
-            //save data registration user ke db
-            $data = [
-                'user_name'     => htmlspecialchars($this->input->post('nama_lengkap', true)),
-                'user_email'    => htmlspecialchars($email),
-                'user_password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
-                'user_role_id'  => "2",
-                'user_ctime'    => time()
-            ];
 
-            // siapkan token
-            $token = base64_encode(random_bytes(32));
+            $user = $this->db->get_where('users', ['user_email' => $email, 'user_is_active' => 1])->row_array();
 
-            $user_token = [
-                'email' => $email,
-                'token' => $token,
-                'date_created' => time()
-            ];
-            
-            $this->m_auth->insert('users', $data);
-            $this->m_auth->insert('user_token', $user_token);
+            if($user) {
+                $token = base64_encode(random_bytes(32));
+                $user_token = [
+                    'email' => $email,
+                    'token' => $token,
+                    'date_created' => time()
+                ];
 
-            $this->_sendEmail($token, 'verify');
+                $this->db->insert('user_token', $user_token);
+                $this->_sendEmail($token, 'forgot');
+
+                $output['message'] = 'Reset Password';
+            } else {
+                $output['error'] = true;
+                $output['message'] = "Alamat email tidak terdaftar atau belum aktif";                
+            }
         }
 
         echo json_encode($output);
@@ -168,7 +164,8 @@ class Auth extends MX_Controller
     private function _sendEmail($token, $type)
     {
         $email = $this->input->post('email');
-        $nama = $this->input->post('nama_lengkap');
+        $user = $this->db->get_where('users', ['user_email' => $email])->row_array();
+        
         $config = [
             'charset' => 'utf-8',
             'protocol' => 'smtp',
@@ -196,10 +193,27 @@ class Auth extends MX_Controller
 						<body>
 							<h2>Thank you for Registering.</h2>
 							<p>Your Account:</p>
-							<p>Name : " . $nama . "</p>
+							<p>Name : " . $user['user_name'] . "</p>
 							<p>Email: " . $email . "</p>
 							<p>Please click the link below to activate your account.</p>
 							<h4><a href='" . base_url() . "auth/verify?email=" . $email . "&token=" . urlencode($token) . "'>Activate My Account</a></h4>
+						</body>
+						</html>
+						";
+            $this->email->message($message);
+        } else if($type == 'forgot') {
+            $this->email->subject('Lupa Password - Distro Camoc');
+            $message ="
+						<html>
+						<head>
+							<title>Forgot Password</title>
+						</head>
+						<body>							
+							<p>Your Account:</p>
+							<p>Name : " . $user['user_name'] . "</p>
+							<p>Email: " . $email . "</p>							
+							<p>Please click the link below to reset your password.</p>
+							<h4><a href='" . base_url() . "auth/reset?email=" . $email . "&token=" . urlencode($token) . "'>Reset Password</a></h4>
 						</body>
 						</html>
 						";
@@ -242,8 +256,7 @@ class Auth extends MX_Controller
                     
                 } else {
                     $this->db->delete('users', ['user_email' => $email]);                    
-                    $this->db->delete('user_token', ['email' => $email])
-                    ;
+                    $this->db->delete('user_token', ['email' => $email]);
                     $this->session->set_flashdata(
                         'message',
                         '<div class="alert alert-danger alert-dismissible">
@@ -358,5 +371,83 @@ class Auth extends MX_Controller
         redirect('auth');
     }
 
+    public function reset() {
+        $email = $this->input->get('email');
+        $token = $this->input->get('token');
+
+        $user = $this->db->get_where('users', ['user_email' => $email])->row_array();
+
+        if($user) {
+            $user_token = $this->db->get_where('user_token', ['token' => $token])->row_array();
+
+            if($user_token) {
+                $this->session->set_userdata('reset_email', $email);
+                $this->changePassword();
+            } else {
+                $this->session->set_flashdata(
+                    'message',
+                    '<div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    Reset password failed, invalid token!
+                </div>'
+                );
+                redirect('auth');
+            }
+        } else {
+            $this->session->set_flashdata(
+                'message',
+                '<div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                Reset password failed, invalid email!
+            </div>'
+            );
+            redirect('auth');
+        }
+    }
+
+    public function changePassword() {
+        if(!$this->session->userdata('reset_email')) {
+            redirect('auth');
+        }
+        
+        if ($this->session->userdata('status') == 'user') {
+            redirect('user');
+        } elseif ($this->session->userdata('status') == 'admin') {
+            redirect('admin');
+        }
+
+        $this->form_validation->set_rules('pass1', 'Password', 'trim|required|min_length[6]|matches[pass2]');
+        $this->form_validation->set_rules('pass2', 'Repeat Password', 'trim|required|min_length[6]|matches[pass1]');        
+
+        if($this->form_validation->run() == false) {
+            $data = array(
+                'title' => 'Toko - Reset Password'
+            );
+    
+            $this->load->view('template/auth_header', $data);
+            $this->load->view('v_reset');
+            $this->load->view('template/auth_footer');
+        } else {
+            $password = password_hash($this->input->post('pass1'), PASSWORD_DEFAULT);
+
+            $email = $this->session->userdata('reset_email');
+
+            $this->db->set('user_password', $password);
+            $this->db->where('user_email', $email);
+            $this->db->update('users');
+
+            $this->session->unset_userdata('reset_email');
+
+            $this->session->set_flashdata(
+                'message',
+                '<div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                Password has been changed! Please login.
+            </div>'
+            );
+
+            redirect('auth');
+        }
+    }
 
 }

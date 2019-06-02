@@ -21,7 +21,7 @@
 			<?= $this->session->flashdata('message'); ?>
 
 			<div class="p-t-18" style="padding-bottom:20px;">
-				<button id="upd-akun" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn1 p-lr-15 trans-04">Update Account</button>
+				<a href="#update"><button id="upd-akun" class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn1 p-lr-15 trans-04">Update Account</button></a>
 			</div>
 
 			<div class="row">
@@ -61,7 +61,7 @@
 				</div>
 				<div class="col-lg-6" id="form-akun" style="display:none;">
 
-					<div class="card">
+					<div class="card" id="update">
 						<div class="card-header" style="background-color:#7c88e3; color:#fff;">
 							<h4>Update Account</h4>
 						</div>

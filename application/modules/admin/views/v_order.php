@@ -60,6 +60,7 @@
       <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"><?= $judul; ?></h1>
       </div>
+
       <!-- Content Row -->
       <div class="row">
 
@@ -135,36 +136,39 @@
       <!-- DataTales Example -->
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Table Produk</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Table Order</h6>
         </div>
         <div class="card-body">
+        <?= $this->session->flashdata('message'); ?>
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr class="text-center">
                   <th width="4%">No</th>
-                  <th>Nama Produk</th>
-                  <th>Size</th>
-                  <th>Deskripsi</th>
-                  <th>Harga</th>
-                  <th>Kategori Produk</th>
-                  <th>Kategori Pengguna</th>
-                  <th>Tgl. Upload</th>
+                  <th>Tgl. Transaksi</th>
+                  <th>Kode Transaksi</th>
+                  <th>Total Harga</th>                                    
+                  <th>Status Order</th>
+                  <th>Status Pembayaran</th>
+                  <th>Bukti TF</th>
+                  <th>No. Resi</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 <?php 
                 $no = 1;
-                foreach($all_produk as $t) : ?>
+                foreach($all_order as $t) : ?>
                 <tr>
                   <td class="text-center"><?= $no; ?></th>
-                  <td><?= $t['produk_nama']; ?></th>
-                  <td class="text-center"><?= $t['produk_size']; ?></th>
-                  <td><?= substr($t['produk_deskripsi'], 0, 15) . " ...." ?></th>
-                  <td><?= "Rp. ".$t['produk_harga']; ?></th>
-                  <td><?= $t['kategori_nama']; ?></td>                  
-                  <td><?= $t['pengguna']; ?></td>
-                  <td><?= date('d F Y', $t['produk_ctime']); ?></td>
+                  <td><?= date('d F Y', $t['order_date']); ?></td>
+                  <td class="text-center"><?= "ORDER-".$t['order_id']; ?></th>
+                  <td><?= "Rp. ".$t['order_total']; ?></th>                  
+                  <td><?= $t['order_status']; ?></th>
+                  <td class="<?= ($t['order_payment'] == 'Lunas') ? 'text-success' : 'text-danger' ?>"><?= $t['order_payment']; ?></th>
+                  <td><a target="_blank" href="<?= base_url('assets/uploads/transfer/').$t['order_bukti_tf']; ?>"><?= $t['order_bukti_tf']; ?></a></th>
+                  <td><?= $t['order_resi']; ?></th>                  
+                  <td class="text-center"><a class="btn btn-primary" href="<?= base_url('admin/update_order/'.$t['order_id']); ?>">Update</a></td>
                 </tr>
                 <?php 
                 $no++;
@@ -174,7 +178,43 @@
           </div>
         </div>
       </div>
-
+      
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Table Order Detail</h6>
+        </div>
+        <div class="card-body">        
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+              <thead>
+                <tr class="text-center">
+                  <th width="4%">No</th>                  
+                  <th>Kode Transaksi</th>
+                  <th>Produk</th>                                    
+                  <th>Qty</th>
+                  <th>Harga (pcs)</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                <?php 
+                $no = 1;
+                foreach($all_order_detail as $t) : ?>
+                <tr>
+                  <td class="text-center"><?= $no; ?></th>                  
+                  <td class="text-center"><?= "ORDER-".$t['order_id']; ?></th>                  
+                  <td><?= $t['order_detail_produk']; ?></th>
+                  <td><?= $t['order_detail_qty']; ?></th>
+                  <td><?= $t['order_detail_harga']; ?></th>                  
+                </tr>
+                <?php 
+                $no++;
+                endforeach; ?>
+              </tbody>               
+            </table>
+          </div>
+        </div>
+      </div>
 
     </div>
     <!-- /.container-fluid -->
