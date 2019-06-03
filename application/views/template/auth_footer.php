@@ -1,3 +1,4 @@
+
 <!-- Bootstrap core JavaScript-->
 <script src="<?= base_url('assets/'); ?>vendor/sbadmin2/jquery/jquery.min.js"></script>
 <script src="<?= base_url('assets/'); ?>vendor/sbadmin2/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -22,6 +23,8 @@
 <script src="<?= base_url('assets/'); ?>js/registration.js"></script>
 <script src="<?= base_url('assets/'); ?>js/login.js"></script>
 <script src="<?= base_url('assets/'); ?>js/forget.js"></script>
+
+<div class="modal"><!-- Place at bottom of page --></div>
 </body>
 
 </html>
