@@ -108,7 +108,7 @@
 
 			<!-- Icon header -->
 			<div class="wrap-icon-header flex-w flex-r-m m-r-15">				
-				<a href="test" class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="<?= count($this->cart->contents()); ?>">
+				<a href="<?= base_url('user/tampil_cart') ?>" class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="<?= count($this->cart->contents()); ?>">
 					<i class="zmdi zmdi-shopping-cart"></i>
 				</a>
 
