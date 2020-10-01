@@ -29,11 +29,12 @@ guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide
 Server Requirements
 *******************
 
-PHP version 5.6 or newer is recommended.
+PHP version 7.2.32 or latest version is recommended.
 
 It should work on 5.3.7 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
+such old versions of PHP, as versions will no longer have security support 
+and could be exposed to unpatched security vulnerabilities, as well as missing
+features.
 
 ************
 Installation
